@@ -24,3 +24,8 @@ jobs:
           key: v1-dependencies--{{ checksum "build.sbt" }}
 
       - run: sbt -batch test
+
+      - store_test_results:
+          path: kamon1Repro/target/test-reports
+      - store_test_results:
+          path: kamon2Repro/target/test-reports
