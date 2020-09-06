@@ -13,15 +13,27 @@ jobs:
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "build.sbt" }}
-            - v1-dependencies-
+            - sbt-{{ checksum "project/build.properties" }}
+            - sbt-
+
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "build.sbt" }}-{{ checksum "project/plugins.sbt" }}
+            - dependencies-
 
       - run: sbt -batch test:compile
 
       - save_cache:
           paths:
+            - ~/.sbt
+          key: sbt-{{ checksum "project/build.properties" }}
+
+      - save_cache:
+          paths:
             - ~/.m2
-          key: v1-dependencies--{{ checksum "build.sbt" }}
+            - ~/.ivy2
+            - ~/.cache/coursier
+          key: dependencies-{{ checksum "build.sbt" }}-{{ checksum "project/plugins.sbt" }}
 
       - run: sbt -batch test
 
